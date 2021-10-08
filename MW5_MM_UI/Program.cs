@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nexus_Core;
 
 namespace MW5_MM_UI
 {
@@ -14,6 +15,7 @@ namespace MW5_MM_UI
             services
                 .AddLogging()
                 .AddScoped<Form1>();
+            services.AddSingleton<INexusApi, NexusAPI>();
         }
         /// <summary>
         ///  The main entry point for the application.
