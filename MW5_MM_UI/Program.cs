@@ -5,17 +5,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nexus_Core;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace MW5_MM_UI
 {
     static class Program
     {
-        private static void ConfigureServices(ServiceCollection services)
+        private static void ConfigureServices(IServiceCollection services)
         {
             services
                 .AddLogging()
                 .AddScoped<Form1>();
             services.AddSingleton<INexusApi, NexusAPI>();
+            //services.AddSingleton<>();
         }
         /// <summary>
         ///  The main entry point for the application.
@@ -23,21 +26,29 @@ namespace MW5_MM_UI
         [STAThread]
         static void Main()
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            var services = new ServiceCollection();
-            ConfigureServices(services);
+            var hostBuilder = Host.CreateDefaultBuilder()
+                .ConfigureServices((hostContext, services) => 
+                {
+                    ConfigureServices(services);
+                });
 
-            using (ServiceProvider serviceProvider = services.BuildServiceProvider())
+            var builderDefault = hostBuilder.Build();
+            using (var serviceScope = builderDefault.Services.CreateScope())
             {
-                var form = serviceProvider.GetRequiredService<Form1>();
-                Application.Run(form);
+                var services = serviceScope.ServiceProvider;
+                try
+                {
+                    Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    var form = services.GetRequiredService<Form1>();
+                    Application.Run(form);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("it broke",ex);
+                }
             }
-            //Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Form1());
         }
     }
 }
