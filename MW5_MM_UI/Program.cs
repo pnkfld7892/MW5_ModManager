@@ -7,17 +7,19 @@ using System.Windows.Forms;
 using Nexus_Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
 
 namespace MW5_MM_UI
 {
     static class Program
     {
-        private static void ConfigureServices(IServiceCollection services)
+        private static void ConfigureServices(IServiceCollection services,IConfiguration config)
         {
             services
                 .AddLogging()
                 .AddScoped<Form1>();
-            services.AddSingleton<INexusApi, NexusAPI>();
+            services.AddHttpClient("nexusApi",c => c.BaseAddress = new Uri($"{config.GetValue<string>("nexusBaseUrl")}/{config.GetValue<string>("gameDomain")}"));
+            services.AddScoped<INexusApi, NexusAPI>();
             //services.AddSingleton<>();
         }
         /// <summary>
@@ -29,7 +31,7 @@ namespace MW5_MM_UI
             var hostBuilder = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) => 
                 {
-                    ConfigureServices(services);
+                    ConfigureServices(services,hostContext.Configuration);
                 });
 
             var builderDefault = hostBuilder.Build();
