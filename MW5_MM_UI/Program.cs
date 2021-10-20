@@ -8,6 +8,9 @@ using Nexus_Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
+using System.IO;
+using Newtonsoft.Json;
+using MW5_MM_Core.Services;
 
 namespace MW5_MM_UI
 {
@@ -17,10 +20,11 @@ namespace MW5_MM_UI
         {
             services
                 .AddLogging()
-                .AddScoped<Form1>();
+                .AddScoped<MainForm>();
             services.AddHttpClient("nexusApi",c => c.BaseAddress = new Uri($"{config.GetValue<string>("nexusBaseUrl")}/{config.GetValue<string>("gameDomain")}"));
             services.AddScoped<INexusApi, NexusAPI>();
-            //services.AddSingleton<>();
+            services.AddScoped<IMw5ModService, Mw5ModService>();
+            services.AddScoped<IBaseClass, BaseClass>();
         }
         /// <summary>
         ///  The main entry point for the application.
@@ -28,11 +32,23 @@ namespace MW5_MM_UI
         [STAThread]
         static void Main()
         {
-            var hostBuilder = Host.CreateDefaultBuilder()
-                .ConfigureServices((hostContext, services) => 
+            //var hostBuilder = Host.CreateDefaultBuilder()
+            //    .ConfigureServices((hostContext, services) =>
+            //    {
+            //        ConfigureServices(services, hostContext.Configuration);
+            //    });
+            var hostBuilder = new Microsoft.Extensions.Hosting.HostBuilder()
+                .ConfigureAppConfiguration(config => config
+                    .SetBasePath(Application.StartupPath)
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddEnvironmentVariables())
+                .ConfigureServices((hostContext, services) =>
                 {
-                    ConfigureServices(services,hostContext.Configuration);
+                    ConfigureServices(services, hostContext.Configuration);
                 });
+
+
+
 
             var builderDefault = hostBuilder.Build();
             using (var serviceScope = builderDefault.Services.CreateScope())
@@ -43,7 +59,7 @@ namespace MW5_MM_UI
                     Application.SetHighDpiMode(HighDpiMode.SystemAware);
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    var form = services.GetRequiredService<Form1>();
+                    var form = services.GetRequiredService<MainForm>();
                     Application.Run(form);
                 }
                 catch (Exception ex)
@@ -52,5 +68,7 @@ namespace MW5_MM_UI
                 }
             }
         }
+
+      
     }
 }
