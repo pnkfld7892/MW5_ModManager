@@ -38,6 +38,7 @@ namespace MW5_MM_UI
             // gridInstalledMods
             // 
             this.gridInstalledMods.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridInstalledMods.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.gridInstalledMods.Location = new System.Drawing.Point(12, 86);
             this.gridInstalledMods.Name = "gridInstalledMods";
             this.gridInstalledMods.RowTemplate.Height = 25;

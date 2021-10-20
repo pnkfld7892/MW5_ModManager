@@ -21,7 +21,7 @@ namespace MW5_MM_UI
     {
         private string _mw5InstallLocation;
         private IBaseClass _base;
-        private List<InstalledMod> _installedMods;
+        private BindingList<InstalledMod> _installedMods;
         public MainForm(IBaseClass _base)
         {
             InitializeComponent();
@@ -55,13 +55,14 @@ namespace MW5_MM_UI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            _installedMods = _base.Mw5ModService().GetInstalledMods();
-            gridInstalledMods.DataSource = _installedMods;
+            _installedMods = new BindingList<InstalledMod>(_base.Mw5ModService().GetInstalledMods());
+            var datasource = new BindingSource(_installedMods,null);
+            gridInstalledMods.DataSource = datasource;
         }
 
         private void btnWriteModList_Click(object sender, EventArgs e)
         {
-            _base.Mw5ModService().WriteInstalledMods(_installedMods);
+            _base.Mw5ModService().WriteInstalledMods(_installedMods.ToList());
         }
     }
 }
