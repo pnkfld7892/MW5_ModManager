@@ -13,6 +13,7 @@ using System.IO;
 using Newtonsoft.Json;
 using MW5_MM_Core.Helpers;
 using MW5_MM_Core.Services;
+using MW5_MM_Core.Models;
 
 namespace MW5_MM_UI
 {
@@ -20,6 +21,7 @@ namespace MW5_MM_UI
     {
         private string _mw5InstallLocation;
         private IBaseClass _base;
+        private List<InstalledMod> _installedMods;
         public MainForm(IBaseClass _base)
         {
             InitializeComponent();
@@ -53,7 +55,13 @@ namespace MW5_MM_UI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            gridInstalledMods.DataSource = _base.Mw5ModService().GetInstalledMods();
+            _installedMods = _base.Mw5ModService().GetInstalledMods();
+            gridInstalledMods.DataSource = _installedMods;
+        }
+
+        private void btnWriteModList_Click(object sender, EventArgs e)
+        {
+            _base.Mw5ModService().WriteInstalledMods(_installedMods);
         }
     }
 }

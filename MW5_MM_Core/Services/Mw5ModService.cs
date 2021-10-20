@@ -14,6 +14,7 @@ namespace MW5_MM_Core.Services
     public interface IMw5ModService
     {
         List<InstalledMod> GetInstalledMods();
+        int WriteInstalledMods(List<InstalledMod> installedMods);
     }
     public class Mw5ModService : IMw5ModService
     {
@@ -47,7 +48,37 @@ namespace MW5_MM_Core.Services
 
             return retList;
 
+        }
 
+        public int WriteInstalledMods(List<InstalledMod> installedMods)
+        {
+            try
+            {
+                var jsonBuilder = new StringBuilder();
+                jsonBuilder.Append("{");
+                jsonBuilder.Append("\"modStatus\":{");
+                for (int i = 0; i < installedMods.Count; i++)
+                {
+                    jsonBuilder.Append($"\"{installedMods[i].Name}\": {{");
+                    jsonBuilder.Append($"\"bEnabled\": {installedMods[i].Enabled.ToString().ToLower()}");
+                    jsonBuilder.Append("}");
+                    if (i < installedMods.Count - 1)
+                        jsonBuilder.Append(",");
+                }
+
+                jsonBuilder.Append("}");
+                jsonBuilder.Append("}");
+                var jsonRaw = jsonBuilder.ToString();
+                var root = _config.GetSection("mw5InstallLocation").Value;
+
+                File.WriteAllText(Path.Combine(root, "MW5Mercs/Mods/modlist.json"), jsonRaw);
+                return 0;
+            }
+            catch(Exception ex)
+            {
+                //todo: log out this error when logger is hooked up
+                return -1;
+            }
         }
     }
 }

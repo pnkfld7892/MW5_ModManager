@@ -31,6 +31,7 @@ namespace MW5_MM_UI
         {
             this.gridInstalledMods = new System.Windows.Forms.DataGridView();
             this.lblModGrid = new System.Windows.Forms.Label();
+            this.btnWriteModList = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gridInstalledMods)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,12 +53,23 @@ namespace MW5_MM_UI
             this.lblModGrid.TabIndex = 1;
             this.lblModGrid.Text = "Installed Mods";
             // 
+            // btnWriteModList
+            // 
+            this.btnWriteModList.Location = new System.Drawing.Point(665, 56);
+            this.btnWriteModList.Name = "btnWriteModList";
+            this.btnWriteModList.Size = new System.Drawing.Size(123, 23);
+            this.btnWriteModList.TabIndex = 2;
+            this.btnWriteModList.Text = "Write Mod List";
+            this.btnWriteModList.UseVisualStyleBackColor = true;
+            this.btnWriteModList.Click += new System.EventHandler(this.btnWriteModList_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnWriteModList);
             this.Controls.Add(this.lblModGrid);
             this.Controls.Add(this.gridInstalledMods);
             this.Name = "MainForm";
@@ -73,6 +85,7 @@ namespace MW5_MM_UI
 
         private System.Windows.Forms.DataGridView gridInstalledMods;
         private System.Windows.Forms.Label lblModGrid;
+        private System.Windows.Forms.Button btnWriteModList;
     }
 }
 
